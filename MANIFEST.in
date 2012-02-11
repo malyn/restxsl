@@ -1,0 +1,2 @@
+recursive-include examples *.css *.sh *.txt *.xsl
+recursive-include xsl *.xsl

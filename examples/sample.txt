@@ -1,0 +1,199 @@
+========================================================================
+Sample reStructuredText Document
+========================================================================
+
+:xsl-template: mysite.xsl
+
+
+Overview
+========================================================================
+
+This reStructuredText document serves to demonstrate some of the
+features of restxsl_.  It also acts as a simple test case for the
+``reST.xsl`` template included in the restxsl distribution.
+
+You can generate the XHTML version of this document by running the
+``build_sample.sh`` script.  This calls ``restxsl`` with the following
+arguments:
+
+-   ``--punctuation``: To educate quotes, dashes, and ellipses.
+-   ``--base-path ..``: To make it possible to include the ``reST.xsl``
+    stylesheet with the path of ``/xsl/reST.xsl``.  This base path
+    assumes that you are running the ``build_sample.sh`` script from the
+    same directory as the ``sample.txt`` file.
+-   ``--write``: To write the output of the ``restxsl`` command to a
+    file (instead of stdout).  The file will be called ``sample.html``.
+    You can change the extension using the ``-e``/``--extension``
+    parameter.
+
+As an aside, this sample file (and the ``mysite.xsl`` base stylesheet)
+is designed to test the functionality of restxsl and the ``reST.xsl``
+stylesheet.  A sample CSS file is also included, but my focus was on
+testing restxsl, not designing an attractive web site.  restxsl can make
+beautiful web sites --- you just need to give it the right input.
+
+.. _restxsl: http://www.strangeGizmo.com/products/restxsl/
+
+
+
+Inline markup
+========================================================================
+
+The ``reST.xsl`` stylesheet applies ``<em>`` tags to *emphasized* text
+and ``<strong>`` tags to **strongly-emphasized** text.
+
+``Inline literals`` are wrapped in ``<tt>`` tags.
+
+Footnotes [#fn]_ are supported as well.  The footnote is included at the
+end of the current section.  This could be changed in the XSL stylesheet
+by explicitly pulling all footnotes to the end of the document (or
+wherever else you would like them).
+
+Standalone hyperlinks work as expected: http://www.strangeGizmo.com/
+
+.. [#fn] Text of the footnote referenced above.
+
+
+Section #2
+========================================================================
+
+Second section.
+
+
+Section #2.1
+------------------------------------------------------------------------
+
+First child of the second section.
+
+Section #2.1.1
+~~~~~~~~~~~~~~
+
+Grandchild of the second section.
+
+Section #2.1.2
+~~~~~~~~~~~~~~
+
+Another grandchild
+
+Section #2.2
+------------------------------------------------------------------------
+
+Second child of the second section.
+
+
+
+Lists
+========================================================================
+
+Bullet list:
+
+-   Item 1
+
+-   Item 2
+
+    -   Item 2.1
+    -   Item 2.2
+
+-   Item 3
+
+
+Enumerated list:
+
+1.  First item.
+
+2.  Second item.
+
+    1.  First child of second item.
+    2.  Second child of second item.
+
+3. Third item.
+
+
+Definition list:
+
+why
+    To test out restxsl.
+
+how
+    By providing some very boring content.
+
+
+Option list:
+
+--version                   show program's version number and exit
+-h, --help                  show this help message and exit
+
+
+
+Blocks
+========================================================================
+
+
+Literal blocks
+------------------------------------------------------------------------
+
+What follows is a literal block::
+
+    First paragraph, with wacky characters
+    like *this*.  Also some bad XML stuff <>&.
+
+    Second paragraph.
+
+Normal text.
+
+
+Line blocks
+------------------------------------------------------------------------
+
+Five lines in a line block:
+
+| Line 1
+|   Line 2 is indented. (assuming compatible CSS)
+|   As is line 3. (same as above)
+| Line 4 has normal indent.
+| And line 5 is the last line.
+
+
+Block quotes
+------------------------------------------------------------------------
+
+Here is a block quote:
+
+    restxsl lets you go beyond the separation of content (XHTML) and
+    presentation (CSS) by further separating content (reST) from layout
+    (XSL).
+
+    -- `Michael Alyn Miller <http://www.strangeGizmo.com>`__
+
+
+
+Tables
+========================================================================
+
+Grid table:
+
++------------+------------+-----------+
+| Header 1   | Header 2   | Header 3  |
++============+============+===========+
+| body row 1 | column 2   | column 3  |
++------------+------------+-----------+
+| body row 2 | Cells may span columns.|
++------------+------------+-----------+
+| body row 3 | Cells may  | - Cells   |
++------------+ span rows. | - contain |
+| body row 4 |            | - blocks. |
++------------+------------+-----------+
+
+Simple table:
+
+=====  =====  ======
+   Inputs     Output
+------------  ------
+  A      B    A or B
+=====  =====  ======
+False  False  False
+True   False  True
+False  True   True
+False  True   True
+True   True   True
+=====  =====  ======

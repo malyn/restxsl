@@ -1,0 +1,210 @@
+/*
+ * Copyright (c) 2006, Michael Alyn Miller <malyn@strangeGizmo.com>.
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice unmodified, this list of conditions, and the following
+ *     disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above
+ *     copyright notice, this list of conditions and the following
+ *     disclaimer in the documentation and/or other materials provided
+ *     with the distribution.
+ * 3.  Neither the name of Michael Alyn Miller nor the names of the
+ *     contributors to this software may be used to endorse or promote
+ *     products derived from this software without specific prior
+ *     written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+
+
+/* Base style. */
+body {
+	color: black;
+	background-color: white;
+	font-family: optima, "arial unicode ms", arial, helvetica, sans-serif;
+	font-size: 11pt;
+	line-height: 1.75em;
+}
+
+
+/* Block styles */
+blockquote {
+	color: #333;
+	background-color: #eee;
+	font-size: 0.85em;
+	font-style: italic;
+	padding: 0em 1em 2em 1em;
+	border-top: 1px dotted #999;
+	border-bottom: 1px dotted #999;
+	margin: 1em 2em;
+}
+
+div.cite {
+	float: right;
+	padding: 0em;
+	margin: -3.5em 3em 0em 0em;
+}
+.cite_label {
+	display: none;
+}
+cite:before {
+	content: "\2014 ";
+}
+cite, cite a {
+	color: #666;
+	background-color: inherit;
+}
+cite {
+	font-size: 0.85em;
+	font-style: italic;
+}
+
+.line-block .line-block {
+	margin-left: 2em;
+}
+
+.literal-block {
+	font-family: "Lucida Console", Courier, monospace;
+	line-height: 125%;
+	margin-left: 2em;
+}
+
+/* Footnote styles. */
+.footnoteref {
+	font-size: 0.8em;
+	font-weight: bold;
+	line-height: 100%;
+	vertical-align: super;
+	text-decoration: none;
+}
+a.footnoteref:hover {
+	text-decoration: underline;
+}
+div.footnote {
+	color: #333;
+	background-color: #eee;
+	font-size: 0.85em;
+	line-height: 175%;
+	padding: 1em;
+	border-left: 1px solid #666;
+	margin: 2em;
+}
+a.footnotereturn {
+	color: #999;
+	background-color: inherit;
+	font-style: italic;
+	padding-right: 1em;
+	float: left;
+}
+div.footnote p {
+	margin: 0em 1em;
+}
+
+/* List styles. */
+dt {
+	font-weight: bold;
+}
+
+/* Option list styles (overrides certain table styles). */
+table.option-list td {
+	line-height: 125%;
+}
+
+table.option-list .option-string {
+	font-family: "Lucida Console", Courier, monospace;
+}
+table.option-list .option-argument {
+	font-style: italic;
+}
+
+/* Table styles. */
+table {
+	padding: 0em;
+	border-top: 1px solid #666;
+	border-left: 1px solid #666;
+	margin: 1.6em; /* blockquote font-size * blockquote margin */
+}
+
+table th {
+	color: black;
+	background-color: #ccc;
+	font-size: 0.9em;
+	line-height: 125%;
+	padding: 0.25em;
+	text-align: center;
+	border-bottom: 1px solid #666;
+	border-right: 1px solid #666;
+}
+
+table td {
+	font-size: 0.85em;
+	line-height: 125%;
+	padding: 0.75em;
+	border-bottom: 1px solid #666;
+	border-right: 1px solid #666;
+}
+
+table p {
+	margin: 0em;
+}
+
+
+/* Site-specific styles. */
+body {
+	margin: 5% 15%;
+}
+
+
+h1 {
+	margin-top: 1em;
+	padding-bottom: 6px;
+	border-bottom: 2px dashed #333;
+}
+
+
+.header {
+	color: white;
+	background-color: black;
+	padding: 1em;
+}
+
+.header .logo {
+	color: #ccf;
+	background-color: inherit;
+	font-size: 200%;
+	display: block;
+}
+
+.header .logo_tagline {
+	color: #66c;
+	background-color: inherit;
+	display: block;
+}
+
+
+.footer {
+	color: #666;
+	background-color: inherit;
+	font-size: 75%;
+}
+
+.restxsl_tagline {
+	font-style: italic;
+	float: right;
+}

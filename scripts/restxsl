@@ -1,0 +1,186 @@
+#!/usr/bin/env python
+#
+# Copyright (c) 2006, Michael Alyn Miller <malyn@strangeGizmo.com>.
+# All rights reserved.
+# vi:ts=4:sw=4:et
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+# 
+# 1.  Redistributions of source code must retain the above copyright
+#     notice unmodified, this list of conditions, and the following
+#     disclaimer.
+# 2.  Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+# 3.  Neither the name of Michael Alyn Miller nor the names of the
+#     contributors to this software may be used to endorse or promote
+#     products derived from this software without specific prior written
+#     permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS "AS IS" AND ANY
+# EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+# THE POSSIBILITY OF SUCH DAMAGE.
+
+"""
+Transforms reStructuredText files into XML files (XHTML, usually) using
+XSL stylesheets.
+"""
+
+
+# Python imports.
+import imp
+import os
+import sys
+
+# restxsl imports.
+import restxsl
+import restxsl.transform
+
+
+
+# ######################################################################
+# Main entry point.
+#
+
+if __name__ == '__main__':
+    # Create our option parser.
+    import optparse
+
+    parser = optparse.OptionParser(
+        usage='usage: %prog [options] file [file ...]',
+        version='%%prog %s' % (restxsl.__version__))
+
+    parser.add_option(
+        '-p', '--punctuation',
+        action='store_true', dest='smart_punctuation',
+        help='smart handling of quotes, dashes, and the ellipsis')
+    parser.set_defaults(smart_punctuation=False)
+
+    parser.add_option(
+        '-w', '--write',
+        action='store_true',
+        help='write output to individual files instead of stdout')
+    parser.set_defaults(write=False)
+
+    parser.add_option(
+        '-e', '--extension',
+        metavar='EXT',
+        help='extension to use when writing files (default: html)')
+    parser.set_defaults(extension='html')
+
+    parser.add_option(
+        '-c', '--char-encoding',
+        metavar='CHARSET',
+        help='output character encoding (default: ASCII)')
+    parser.set_defaults(char_encoding='ASCII')
+
+    parser.add_option(
+        '-b', '--base-path',
+        metavar='DIR',
+        help='set base path for stylesheets (default: current directory)')
+    parser.set_defaults(base_path=None)
+
+    parser.add_option(
+        '-s', '--stylesheet',
+        metavar='FILE',
+        help='ignore stylesheet specified by reST file; use FILE instead')
+    parser.set_defaults(stylesheet=None)
+
+    parser.add_option(
+        '-D', '--define',
+        action='append', dest='params',
+        metavar='NAME=VALUE',
+        help='define stylesheet parameter')
+    parser.set_defaults(params=[])
+
+    parser.add_option(
+        '-m', '--module',
+        metavar='FILE',
+        help='module that contains functions for use by the restxsl directive')
+    parser.set_defaults(module=None)
+
+
+    # Parse the arguments.
+    (options, args) = parser.parse_args()
+    if len(args) < 1:
+        parser.error('incorrect number of arguments')
+
+    # Decode the positional arguments.
+    restFiles = args
+
+    # Strip leading periods from the given extension.
+    while options.extension.startswith('.'):
+        options.extension = options.extension[1:]
+
+    # Turn XSL parameters into a dictionary.
+    xslParams = {}
+    for p in options.params:
+        try:
+            name, value = p.split('=')
+            xslParams[name] = "'%s'" % (value)
+        except:
+            parser.error('invalid format for stylesheet parameter: %s' % (p))
+
+    # Load the module containing the restxsl directives.
+    restxslModule = None
+    if options.module:
+        # Get the module name.
+        moduleName = os.path.splitext(os.path.basename(options.module))[0]
+
+        # Find the module.
+        fp, path, description = imp.find_module(
+            moduleName, [os.path.dirname(options.module)])
+
+        # Load the module.
+        try:
+            restxslModule = imp.load_module(
+                moduleName, fp, path, description)
+        finally:
+            fp.close()
+
+    # Convert the file(s).
+    for restFile in restFiles:
+        # Convert the reStructuredText file to an XML file.
+        resultDocuments = restxsl.transform.restxsl(
+            restFile,
+            smartPunctuation=options.smart_punctuation,
+            extModule=restxslModule,
+            encoding=options.char_encoding,
+            xslBasePath=options.base_path,
+            xslPath=options.stylesheet, xslParams=xslParams)
+
+        # Process each of the result documents.  There will usually be
+        # only one, but in the case of a multidoc directive there will
+        # be multiple output documents.
+        for filename, xml in resultDocuments:
+            # Write the output to a file if requested to do so,
+            # otherwise just send the XML contents to stdout.  Documents
+            # read from stdin are always written to stdout.
+            if options.write and restFile != '-':
+                # Generate the filename ourselves if one was not given
+                # to us by the restxsl function.  This will only be
+                # necessary if we are not processing a multidoc result
+                # set (because multidoc results always have filenames,
+                # and single document results never do).
+                if filename is None:
+                    assert len(resultDocuments) == 1
+                    filename = os.path.splitext(restFile)[0]
+
+                # Write out the file.
+                out = open(filename + '.' + options.extension, 'w')
+                try:
+                    out.write(xml)
+                finally:
+                    out.close()
+            else:
+                sys.stdout.write(xml)
